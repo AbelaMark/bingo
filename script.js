@@ -1,8 +1,10 @@
-function startGame() {
+const numbersDiv = document.getElementById("numbers");
 
-let number = Math.floor(Math.random() * 75) + 1;
+// Generate 1–75
+for (let i = 1; i <= 75; i++) {
+  const div = document.createElement("div");
+  div.className = "number";
+  div.innerText = i;
 
-document.getElementById("number").innerHTML =
-"Next Number: " + number;
-
+  numbersDiv.appendChild(div);
 }
