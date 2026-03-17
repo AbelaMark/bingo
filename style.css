@@ -40,6 +40,11 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 4px;
   user-select: none;
+  transition: 0.2s;
+}
+
+.cards-grid .card:hover {
+  background: #e0e0e0;
 }
 
 .cards-grid .card.selected {
@@ -56,20 +61,61 @@ h1 {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
+.player-card-wrapper h4 {
+  margin-top: 15px;
+}
+
+.previous-calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.previous-calls .call-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* Bingo 5x5 card */
+#playerCardWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.bingo-header {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
 .player-card {
   display: grid;
   grid-template-columns: repeat(5, 50px);
   grid-template-rows: repeat(5, 50px);
   gap: 5px;
-  margin-top: 15px;
 }
 
 .player-card .card-number {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #333;
+  border: 2px solid #333;
   background: #fff;
   border-radius: 4px;
   font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.player-card .card-number.marked {
+  background: #4CAF50;
+  color: white;
 }
