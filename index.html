@@ -1,56 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bingo Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="container">
-
-  <!-- TOP STATS -->
-  <div class="top-bar">
-    <div>Derash 736</div>
-    <div>Players 92</div>
-    <div>Bet 10</div>
-    <div>Call 6</div>
-    <div>Game No 1</div>
-  </div>
-
-  <div class="main">
-
-    <!-- LEFT GRID -->
-    <div class="grid">
-      <div class="header">
-        <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
-      </div>
-
-      <div id="numbers"></div>
+  <h1>Bingo Game</h1>
+  <div class="container">
+    <!-- Left panel: all cartelas -->
+    <div class="all-cards">
+      <h3>Pick a Cartela (1-400)</h3>
+      <div class="cards-grid" id="cardsGrid"></div>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right">
-      <h2>STARTED</h2>
-
-      <div class="current-call">
-        Current Call: <span id="call">I-16</span>
-      </div>
-
-      <div class="recent">
-        <span>G58</span>
-        <span>B1</span>
-        <span>I16</span>
-      </div>
-
-      <div class="message">
-        Please wait for this game to be completed
-      </div>
+    <!-- Right panel: player 5x5 cartela -->
+    <div class="player-card-wrapper">
+      <h3 id="gameStatus">Wait until the current game finishes...</h3>
+      <div class="player-card" id="playerCard"></div>
     </div>
-
   </div>
 
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
