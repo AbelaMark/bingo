@@ -18,7 +18,20 @@
     <!-- Right panel: player 5x5 cartela -->
     <div class="player-card-wrapper">
       <h3 id="gameStatus">Wait until the current game finishes...</h3>
-      <div class="player-card" id="playerCard"></div>
+      <div class="player-card" id="playerCardWrapper">
+        <div class="bingo-header">
+          <div>B</div>
+          <div>I</div>
+          <div>N</div>
+          <div>G</div>
+          <div>O</div>
+        </div>
+        <div class="player-card" id="playerCard"></div>
+      </div>
+
+      <!-- Previous called numbers -->
+      <h4>Previous Calls:</h4>
+      <div id="previousCalls" class="previous-calls"></div>
     </div>
   </div>
 
