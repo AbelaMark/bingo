@@ -1,180 +1,54 @@
-const numbersDiv = document.getElementById("numbers"); // Main 1-75 grid
-const callText = document.getElementById("call");
+const cardsGrid = document.getElementById("cardsGrid");
+const playerCardDiv = document.getElementById("playerCard");
+const gameStatus = document.getElementById("gameStatus");
 
-let calledNumbers = [];
-let playerCard = [];
+// Simulate current game state
+let currentGameActive = true;
 
-// ------------------
-// Generate Main 1-75 Grid
-// ------------------
-for (let i = 1; i <= 75; i++) {
-  const div = document.createElement("div");
-  div.className = "number";
-  div.innerText = i;
-  div.id = "num-" + i;
+// Generate 1-400 cartelas
+for (let i = 1; i <= 400; i++) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerText = i;
 
-  numbersDiv.appendChild(div);
-}
-
-// ------------------
-// Generate Player 5x5 Bingo Card
-// ------------------
-function generateCard() {
-  playerCard = [];
-  const existing = document.querySelector(".player-card");
-  if (existing) existing.remove();
-
-  const grid = document.createElement("div");
-  grid.className = "player-card";
-  document.body.appendChild(grid);
-
-  const columns = { B: [], I: [], N: [], G: [], O: [] };
-
-  // Generate numbers per column ranges
-  columns.B = getRandomNumbers(1, 15, 5);
-  columns.I = getRandomNumbers(16, 30, 5);
-  columns.N = getRandomNumbers(31, 45, 5);
-  columns.G = getRandomNumbers(46, 60, 5);
-  columns.O = getRandomNumbers(61, 75, 5);
-
-  // Build card grid
-  for (let i = 0; i < 5; i++) {
-    for (const col of ["B","I","N","G","O"]) {
-      const div = document.createElement("div");
-      div.className = "card-number";
-      div.innerText = columns[col][i];
-      div.dataset.number = columns[col][i];
-      div.addEventListener("click", () => selectNumber(div));
-      grid.appendChild(div);
-
-      playerCard.push({
-        number: columns[col][i],
-        element: div,
-        marked: false
-      });
+  card.addEventListener("click", () => {
+    if (currentGameActive) {
+      alert("⏳ Wait until the current game finishes");
+      return;
     }
+
+    // Highlight selected card
+    document.querySelectorAll(".cards-grid .card").forEach(c => c.classList.remove("selected"));
+    card.classList.add("selected");
+
+    // Generate 5x5 cartela for player
+    generatePlayerCard(i);
+  });
+
+  cardsGrid.appendChild(card);
+}
+
+// Generate 5x5 cartela
+function generatePlayerCard(cardId) {
+  playerCardDiv.innerHTML = "";
+  gameStatus.innerText = `Your Cartela: ${cardId}`;
+
+  // Simple random numbers for demo
+  let numbers = new Set();
+  while (numbers.size < 25) {
+    numbers.add(Math.floor(Math.random() * 75) + 1);
   }
 
-  // Optional: middle free space
-  const freeIndex = 12; // center
-  playerCard[freeIndex].element.innerText = "FREE";
-  playerCard[freeIndex].marked = true;
-  playerCard[freeIndex].element.classList.add("marked");
+  numbers.forEach(num => {
+    const cell = document.createElement("div");
+    cell.className = "card-number";
+    cell.innerText = num;
+    playerCardDiv.appendChild(cell);
+  });
 }
 
-// ------------------
-// Helper: Random numbers without repetition
-// ------------------
-function getRandomNumbers(min, max, count) {
-  const arr = [];
-  while(arr.length < count){
-    const num = Math.floor(Math.random() * (max - min + 1)) + min;
-    if(!arr.includes(num)) arr.push(num);
-  }
-  return arr;
-}
-
-// ------------------
-// Mark player number when clicked
-// ------------------
-function selectNumber(div){
-  const num = parseInt(div.dataset.number);
-  if(calledNumbers.includes(num)){
-    div.classList.add("marked");
-    const cell = playerCard.find(c => c.number === num);
-    if(cell) cell.marked = true;
-
-    if(checkBingo()){
-      alert("🎉 BINGO! You win!");
-    }
-  } else {
-    alert("This number hasn't been called yet!");
-  }
-}
-
-// ------------------
-// Check for Bingo
-// ------------------
-function checkBingo(){
-  const gridSize = 5;
-  let bingo = false;
-
-  // Rows
-  for(let r=0; r<gridSize; r++){
-    let row = true;
-    for(let c=0; c<gridSize; c++){
-      if(!playerCard[r*gridSize + c].marked) row=false;
-    }
-    if(row) bingo=true;
-  }
-
-  // Columns
-  for(let c=0; c<gridSize; c++){
-    let col = true;
-    for(let r=0; r<gridSize; r++){
-      if(!playerCard[r*gridSize + c].marked) col=false;
-    }
-    if(col) bingo=true;
-  }
-
-  // Diagonals
-  let diag1=true, diag2=true;
-  for(let i=0;i<gridSize;i++){
-    if(!playerCard[i*gridSize + i].marked) diag1=false;
-    if(!playerCard[i*gridSize + (gridSize-1-i)].marked) diag2=false;
-  }
-  if(diag1 || diag2) bingo=true;
-
-  return bingo;
-}
-
-// ------------------
-// Call Numbers Logic
-// ------------------
-function getLetter(num) {
-  if (num <= 15) return "B";
-  if (num <= 30) return "I";
-  if (num <= 45) return "N";
-  if (num <= 60) return "G";
-  return "O";
-}
-
-function callNumber() {
-  if (calledNumbers.length >= 75) return;
-
-  let num;
-  do {
-    num = Math.floor(Math.random() * 75) + 1;
-  } while (calledNumbers.includes(num));
-
-  calledNumbers.push(num);
-
-  const letter = getLetter(num);
-  const callText = document.getElementById("call");
-  callText.innerText = `${letter}-${num}`;
-
-  // Highlight number on main grid
-  const element = document.getElementById("num-" + num);
-  if (element) element.classList.add("active");
-
-  // Highlight on player card
-  const cell = playerCard.find(c => c.number === num);
-  if(cell) cell.element.classList.add("called");
-
-  // Add to recent calls
-  addRecent(`${letter}${num}`);
-}
-
-function addRecent(text) {
-  const recentDiv = document.querySelector(".recent");
-  const span = document.createElement("span");
-  span.innerText = text;
-  recentDiv.prepend(span);
-  if (recentDiv.children.length > 6) recentDiv.removeChild(recentDiv.lastChild);
-}
-
-// ------------------
-// Initialize
-// ------------------
-generateCard();
-setInterval(callNumber, 3000);
+// Simulate current game finishing after 5 seconds
+setTimeout(() => {
+  currentGameActive = false;
+  gameStatus.innerText = "Select a cartela to start the next game";
+}, 5000);
