@@ -141,3 +141,42 @@ body {
   border: none;
   border-radius: 10px;
 }
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #ff7a00;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  width: 300px;
+}
+
+.popup-content h1 {
+  margin: 0;
+}
+
+#winnerCard {
+  margin-top: 10px;
+}
+
+#countdownReset {
+  margin-top: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
