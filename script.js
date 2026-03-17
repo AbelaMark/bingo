@@ -7,6 +7,12 @@ const playerCardDiv = document.getElementById("playerCard");
 const winnerPopup = document.getElementById("winnerPopup");
 const winnerCardDiv = document.getElementById("winnerCard");
 const countdownResetDiv = document.getElementById("countdownReset");
+const cartelaGrid = document.getElementById("cartelaGrid");
+const cartelaScreen = document.getElementById("cartelaScreen");
+const mainGame = document.querySelector(".main");
+
+mainGame.style.display = "none";
+
 
 let playerNumbers = [];
 let gameInterval;
@@ -15,6 +21,17 @@ let numbers = [];
 let calledNumbers = [];
 let gameStarted = false;
 let timer = 20;
+
+// generate 1–400
+for (let i = 1; i <= 400; i++) {
+  const div = document.createElement("div");
+  div.className = "cartela-item";
+  div.innerText = i;
+
+  div.onclick = () => selectCartela(i);
+
+  cartelaGrid.appendChild(div);
+}
 
 // Generate 1–75 board
 let num = 1;
