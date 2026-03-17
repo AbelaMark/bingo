@@ -1,75 +1,99 @@
-const cardsGrid = document.getElementById("cardsGrid");
-const playerCardDiv = document.getElementById("playerCard");
-const gameStatus = document.getElementById("gameStatus");
+const bingoGrid = document.getElementById("bingoGrid");
+const currentCallDiv = document.getElementById("currentCall");
 const previousCallsDiv = document.getElementById("previousCalls");
+const statusDiv = document.getElementById("status");
+const callCount = document.getElementById("callCount");
+const playerCardDiv = document.getElementById("playerCard");
 
-// Simulate current game state
-let currentGameActive = true;
+let numbers = [];
+let calledNumbers = [];
+let gameStarted = false;
+let timer = 20;
 
-// Store previous called numbers
-let previousCalls = [];
-
-// Generate 1-400 cartelas
-for (let i = 1; i <= 400; i++) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerText = i;
-
-  card.addEventListener("click", () => {
-    if (currentGameActive) {
-      alert("⏳ Wait until the current game finishes");
-      return;
-    }
-
-    document.querySelectorAll(".cards-grid .card").forEach(c => c.classList.remove("selected"));
-    card.classList.add("selected");
-
-    generatePlayerCard(i);
-  });
-
-  cardsGrid.appendChild(card);
-}
-
-// Generate 5x5 cartela
-function generatePlayerCard(cardId) {
-  playerCardDiv.innerHTML = "";
-  gameStatus.innerText = `Your Cartela: ${cardId}`;
-
-  // Generate 25 unique random numbers
-  let numbers = new Set();
-  while (numbers.size < 25) {
-    numbers.add(Math.floor(Math.random() * 75) + 1);
-  }
-
-  numbers.forEach(num => {
+// Generate 1–75 board
+let num = 1;
+for (let col = 0; col < 5; col++) {
+  for (let row = 0; row < 15; row++) {
     const cell = document.createElement("div");
-    cell.className = "card-number";
+    cell.className = "cell";
     cell.innerText = num;
+    cell.id = "num-" + num;
 
-    // Click to mark number (simulate called)
-    cell.addEventListener("click", () => {
-      cell.classList.toggle("marked");
-      addToPreviousCalls(num);
-    });
-
-    playerCardDiv.appendChild(cell);
-  });
-}
-
-// Add number to previous calls
-function addToPreviousCalls(num) {
-  if (!previousCalls.includes(num)) {
-    previousCalls.push(num);
-
-    const callDiv = document.createElement("div");
-    callDiv.className = "call-number";
-    callDiv.innerText = num;
-    previousCallsDiv.appendChild(callDiv);
+    bingoGrid.appendChild(cell);
+    numbers.push(num);
+    num++;
   }
 }
 
-// Simulate current game finishing after 5 seconds
-setTimeout(() => {
-  currentGameActive = false;
-  gameStatus.innerText = "Select a cartela to start the next game";
-}, 5000);
+// Generate player card
+function generateCard() {
+  playerCardDiv.innerHTML = "";
+  let nums = new Set();
+
+  while (nums.size < 25) {
+    nums.add(Math.floor(Math.random() * 75) + 1);
+  }
+
+  let arr = Array.from(nums);
+
+  arr.forEach((n, i) => {
+    const div = document.createElement("div");
+    div.innerText = (i === 12) ? "*" : n;
+
+    if (i === 12) div.classList.add("marked");
+
+    playerCardDiv.appendChild(div);
+  });
+}
+
+generateCard();
+
+// Countdown
+let countdown = setInterval(() => {
+  timer--;
+  statusDiv.innerText = "WAITING (" + timer + "s)";
+
+  if (timer === 0) {
+    clearInterval(countdown);
+    startGame();
+  }
+}, 1000);
+
+// Start game
+function startGame() {
+  gameStarted = true;
+  statusDiv.innerText = "STARTED";
+
+  setInterval(callNumber, 2000);
+}
+
+// Call number
+function callNumber() {
+  if (numbers.length === 0) return;
+
+  const randIndex = Math.floor(Math.random() * numbers.length);
+  const num = numbers.splice(randIndex, 1)[0];
+
+  calledNumbers.push(num);
+  callCount.innerText = calledNumbers.length;
+
+  // Display current call
+  currentCallDiv.innerText = getLetter(num) + "-" + num;
+
+  // Highlight board
+  document.getElementById("num-" + num)?.classList.add("called");
+
+  // Add to previous calls
+  const prev = document.createElement("div");
+  prev.innerText = getLetter(num) + num;
+  previousCallsDiv.appendChild(prev);
+}
+
+// Get BINGO letter
+function getLetter(num) {
+  if (num <= 15) return "B";
+  if (num <= 30) return "I";
+  if (num <= 45) return "N";
+  if (num <= 60) return "G";
+  return "O";
+}
