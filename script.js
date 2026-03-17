@@ -1,17 +1,29 @@
-// ------------------
-// Global Variables
-// ------------------
-const numbersDiv = document.getElementById("numbers");
+const numbersDiv = document.getElementById("numbers"); // Main 1-75 grid
 const callText = document.getElementById("call");
 
 let calledNumbers = [];
 let playerCard = [];
 
 // ------------------
-// Generate Player Bingo Card (5x5)
+// Generate Main 1-75 Grid
+// ------------------
+for (let i = 1; i <= 75; i++) {
+  const div = document.createElement("div");
+  div.className = "number";
+  div.innerText = i;
+  div.id = "num-" + i;
+
+  numbersDiv.appendChild(div);
+}
+
+// ------------------
+// Generate Player 5x5 Bingo Card
 // ------------------
 function generateCard() {
   playerCard = [];
+  const existing = document.querySelector(".player-card");
+  if (existing) existing.remove();
+
   const grid = document.createElement("div");
   grid.className = "player-card";
   document.body.appendChild(grid);
@@ -50,7 +62,9 @@ function generateCard() {
   playerCard[freeIndex].element.classList.add("marked");
 }
 
-// Helper: get random numbers without repetition
+// ------------------
+// Helper: Random numbers without repetition
+// ------------------
 function getRandomNumbers(min, max, count) {
   const arr = [];
   while(arr.length < count){
@@ -61,7 +75,7 @@ function getRandomNumbers(min, max, count) {
 }
 
 // ------------------
-// Mark number when clicked
+// Mark player number when clicked
 // ------------------
 function selectNumber(div){
   const num = parseInt(div.dataset.number);
@@ -70,7 +84,6 @@ function selectNumber(div){
     const cell = playerCard.find(c => c.number === num);
     if(cell) cell.marked = true;
 
-    // Check for Bingo
     if(checkBingo()){
       alert("🎉 BINGO! You win!");
     }
@@ -80,7 +93,7 @@ function selectNumber(div){
 }
 
 // ------------------
-// Check for Bingo (rows, columns, diagonals)
+// Check for Bingo
 // ------------------
 function checkBingo(){
   const gridSize = 5;
@@ -116,7 +129,7 @@ function checkBingo(){
 }
 
 // ------------------
-// Call numbers like before
+// Call Numbers Logic
 // ------------------
 function getLetter(num) {
   if (num <= 15) return "B";
@@ -144,7 +157,7 @@ function callNumber() {
   const element = document.getElementById("num-" + num);
   if (element) element.classList.add("active");
 
-  // Highlight on player card if exists
+  // Highlight on player card
   const cell = playerCard.find(c => c.number === num);
   if(cell) cell.element.classList.add("called");
 
