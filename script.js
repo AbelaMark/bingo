@@ -4,6 +4,12 @@ const previousCallsDiv = document.getElementById("previousCalls");
 const statusDiv = document.getElementById("status");
 const callCount = document.getElementById("callCount");
 const playerCardDiv = document.getElementById("playerCard");
+const winnerPopup = document.getElementById("winnerPopup");
+const winnerCardDiv = document.getElementById("winnerCard");
+const countdownResetDiv = document.getElementById("countdownReset");
+
+let playerNumbers = [];
+let gameInterval;
 
 let numbers = [];
 let calledNumbers = [];
@@ -28,6 +34,8 @@ for (let col = 0; col < 5; col++) {
 // Generate player card
 function generateCard() {
   playerCardDiv.innerHTML = "";
+  playerNumbers = [];
+
   let nums = new Set();
 
   while (nums.size < 25) {
@@ -38,9 +46,15 @@ function generateCard() {
 
   arr.forEach((n, i) => {
     const div = document.createElement("div");
-    div.innerText = (i === 12) ? "*" : n;
 
-    if (i === 12) div.classList.add("marked");
+    if (i === 12) {
+      div.innerText = "*";
+      div.classList.add("marked");
+      playerNumbers.push("FREE");
+    } else {
+      div.innerText = n;
+      playerNumbers.push(n);
+    }
 
     playerCardDiv.appendChild(div);
   });
@@ -77,18 +91,102 @@ function callNumber() {
   calledNumbers.push(num);
   callCount.innerText = calledNumbers.length;
 
-  // Display current call
   currentCallDiv.innerText = getLetter(num) + "-" + num;
 
-  // Highlight board
   document.getElementById("num-" + num)?.classList.add("called");
 
-  // Add to previous calls
   const prev = document.createElement("div");
   prev.innerText = getLetter(num) + num;
   previousCallsDiv.appendChild(prev);
+
+  // MARK PLAYER CARD
+  const cells = playerCardDiv.children;
+  for (let i = 0; i < cells.length; i++) {
+    if (playerNumbers[i] === num) {
+      cells[i].classList.add("marked");
+    }
+  }
+
+  // CHECK WIN
+  if (checkWin()) {
+    showWinner();
+  }
 }
 
+function checkWin() {
+  const cells = playerCardDiv.children;
+
+  // check rows only (5 rows)
+  for (let row = 0; row < 5; row++) {
+    let win = true;
+
+    for (let col = 0; col < 5; col++) {
+      let index = row * 5 + col;
+      if (!cells[index].classList.contains("marked")) {
+        win = false;
+        break;
+      }
+    }
+
+    if (win) return true;
+  }
+
+  return false;
+}
+
+function showWinner() {
+  clearInterval(gameInterval);
+
+  winnerPopup.classList.remove("hidden");
+
+  // copy player card
+  winnerCardDiv.innerHTML = playerCardDiv.innerHTML;
+
+  startResetCountdown();
+}
+
+function resetGame() {
+  winnerPopup.classList.add("hidden");
+
+  // reset variables
+  numbers = [];
+  calledNumbers = [];
+  previousCallsDiv.innerHTML = "";
+  callCount.innerText = 0;
+
+  // regenerate board
+  bingoGrid.innerHTML = "";
+  let num = 1;
+
+  for (let col = 0; col < 5; col++) {
+    for (let row = 0; row < 15; row++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.innerText = num;
+      cell.id = "num-" + num;
+
+      bingoGrid.appendChild(cell);
+      numbers.push(num);
+      num++;
+    }
+  }
+
+  generateCard();
+
+  // restart countdown
+  timer = 20;
+  statusDiv.innerText = "WAITING (20s)";
+
+  let countdown = setInterval(() => {
+    timer--;
+    statusDiv.innerText = "WAITING (" + timer + "s)";
+
+    if (timer === 0) {
+      clearInterval(countdown);
+      startGame();
+    }
+  }, 1000);
+}
 // Get BINGO letter
 function getLetter(num) {
   if (num <= 15) return "B";
