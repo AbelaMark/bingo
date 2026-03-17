@@ -165,16 +165,18 @@ function showWinner(name) {
 function resetGame() {
   winnerPopup.classList.add("hidden");
 
-  // reset variables
+  mainGame.style.display = "none";
+  cartelaScreen.style.display = "block";
+
+  // reset values
   numbers = [];
   calledNumbers = [];
   previousCallsDiv.innerHTML = "";
   callCount.innerText = 0;
 
-  // regenerate board
   bingoGrid.innerHTML = "";
-  let num = 1;
 
+  let num = 1;
   for (let col = 0; col < 5; col++) {
     for (let row = 0; row < 15; row++) {
       const cell = document.createElement("div");
@@ -187,22 +189,6 @@ function resetGame() {
       num++;
     }
   }
-
-  generateCard();
-
-  // restart countdown
-  timer = 20;
-  statusDiv.innerText = "WAITING (20s)";
-
-  let countdown = setInterval(() => {
-    timer--;
-    statusDiv.innerText = "WAITING (" + timer + "s)";
-
-    if (timer === 0) {
-      clearInterval(countdown);
-      startGame();
-    }
-  }, 1000);
 }
 // Get BINGO letter
 function getLetter(num) {
@@ -222,3 +208,27 @@ document.querySelector(".bingo-btn").addEventListener("click", () => {
     alert("❌ Not a valid BINGO!");
   }
 });
+
+function selectCartela(num) {
+  cartelaScreen.style.display = "none";
+  mainGame.style.display = "flex";
+
+  generateCard(); // your card logic
+
+  startWaiting();
+}
+
+function startWaiting() {
+  timer = 20;
+  statusDiv.innerText = "WAITING (20s)";
+
+  let countdown = setInterval(() => {
+    timer--;
+    statusDiv.innerText = "WAITING (" + timer + "s)";
+
+    if (timer === 0) {
+      clearInterval(countdown);
+      startGame();
+    }
+  }, 1000);
+}
