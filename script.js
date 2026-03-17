@@ -78,7 +78,7 @@ function startGame() {
   gameStarted = true;
   statusDiv.innerText = "STARTED";
 
-  setInterval(callNumber, 2000);
+ gameInterval = setInterval(callNumber, 2000);
 }
 
 // Call number
@@ -107,10 +107,6 @@ function callNumber() {
     }
   }
 
-  // CHECK WIN
-  if (checkWin()) {
-    showWinner();
-  }
 }
 
 function checkWin() {
@@ -134,12 +130,16 @@ function checkWin() {
   return false;
 }
 
-function showWinner() {
-  clearInterval(gameInterval);
+function showWinner(name) {
+  gameStarted = false;
+
+  clearInterval(gameInterval); // stop calling numbers
 
   winnerPopup.classList.remove("hidden");
 
-  // copy player card
+  document.getElementById("winnerName").innerText = name;
+
+  // copy card
   winnerCardDiv.innerHTML = playerCardDiv.innerHTML;
 
   startResetCountdown();
@@ -195,3 +195,13 @@ function getLetter(num) {
   if (num <= 60) return "G";
   return "O";
 }
+
+document.querySelector(".bingo-btn").addEventListener("click", () => {
+  if (!gameStarted) return;
+
+  if (checkWin()) {
+    showWinner("You"); // later replace with real name
+  } else {
+    alert("❌ Not a valid BINGO!");
+  }
+});
