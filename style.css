@@ -1,121 +1,143 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
   margin: 0;
-  padding: 20px;
+  font-family: Arial;
+  background: #b89cc8;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.container {
+/* TOP BAR */
+.top-bar {
   display: flex;
-  gap: 20px;
-}
-
-/* Left panel */
-.all-cards {
-  flex: 1;
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 5px;
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-.cards-grid .card {
-  background: #f0f0f0;
+  justify-content: space-around;
+  background: #e5d7ef;
   padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  user-select: none;
-  transition: 0.2s;
-}
-
-.cards-grid .card:hover {
-  background: #e0e0e0;
-}
-
-.cards-grid .card.selected {
-  background: #4CAF50;
-  color: white;
-}
-
-/* Right panel */
-.player-card-wrapper {
-  flex: 1;
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-.player-card-wrapper h4 {
-  margin-top: 15px;
-}
-
-.previous-calls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.previous-calls .call-number {
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  background: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-weight: bold;
 }
 
-/* Bingo 5x5 card */
-#playerCardWrapper {
+/* MAIN */
+.main {
   display: flex;
-  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* LEFT BOARD */
+.left-board {
+  width: 40%;
+  background: #c9aedb;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .bingo-header {
   display: grid;
-  grid-template-columns: repeat(5, 50px);
+  grid-template-columns: repeat(5, 1fr);
   text-align: center;
-  font-weight: bold;
   margin-bottom: 5px;
 }
 
-.player-card {
+.bingo-header div {
+  padding: 8px;
+  color: white;
+  font-weight: bold;
+}
+
+.b { background: orange; }
+.i { background: green; }
+.n { background: blue; }
+.g { background: red; }
+.o { background: purple; }
+
+.bingo-grid {
   display: grid;
-  grid-template-columns: repeat(5, 50px);
-  grid-template-rows: repeat(5, 50px);
+  grid-template-columns: repeat(5, 1fr);
   gap: 5px;
 }
 
-.player-card .card-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #333;
-  background: #fff;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+.cell {
+  background: #ddd;
+  padding: 8px;
+  text-align: center;
+  border-radius: 5px;
 }
 
-.player-card .card-number.marked {
-  background: #4CAF50;
+.called {
+  background: orange;
   color: white;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  width: 60%;
+  background: #c9aedb;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.status {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* CURRENT CALL */
+.current-call {
+  background: purple;
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.call-circle {
+  background: orange;
+  padding: 10px 15px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+/* PREVIOUS CALLS */
+.previous-calls {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.previous-calls div {
+  background: blue;
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* PLAYER CARD */
+.player-card {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.player-card div {
+  background: #eee;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.marked {
+  background: green;
+  color: white;
+}
+
+/* BUTTON */
+.bingo-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 15px;
+  background: orange;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
 }
