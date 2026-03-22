@@ -1,3 +1,4 @@
+const socket = io();
 const bingoGrid = document.getElementById("bingoGrid");
 const currentCallDiv = document.getElementById("currentCall");
 const previousCallsDiv = document.getElementById("previousCalls");
@@ -132,7 +133,7 @@ function startGame() {
   gameStarted = true;
   statusDiv.innerText = "STARTED";
 
- gameInterval = setInterval(callNumber, 2000);
+
 }
 
 // Call number
@@ -281,3 +282,25 @@ function startResetCountdown() {
     }
   }, 1000);
 }
+
+socket.emit("joinGame", {
+  name: "Player_" + Math.floor(Math.random() * 1000)
+});
+
+socket.on("gameState", (game) => {
+  document.getElementById("players").innerText = game.players.length;
+});
+
+socket.on("numberCalled", (num) => {
+  calledNumbers.push(num);
+
+  callCount.innerText = calledNumbers.length;
+
+  currentCallDiv.innerText = getLetter(num) + "-" + num;
+
+  document.getElementById("num-" + num)?.classList.add("called");
+
+  const prev = document.createElement("div");
+  prev.innerText = getLetter(num) + num;
+  previousCallsDiv.appendChild(prev);
+});
