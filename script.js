@@ -53,28 +53,45 @@ function generateCard() {
   playerCardDiv.innerHTML = "";
   playerNumbers = [];
 
-  let nums = new Set();
+  const ranges = [
+    [1, 15],   // B
+    [16, 30],  // I
+    [31, 45],  // N
+    [46, 60],  // G
+    [61, 75]   // O
+  ];
 
-  while (nums.size < 25) {
-    nums.add(Math.floor(Math.random() * 75) + 1);
-  }
+  let grid = [];
 
-  let arr = Array.from(nums);
+  for (let col = 0; col < 5; col++) {
+    let nums = new Set();
 
-  arr.forEach((n, i) => {
-    const div = document.createElement("div");
-
-    if (i === 12) {
-      div.innerText = "*";
-      div.classList.add("marked");
-      playerNumbers.push("FREE");
-    } else {
-      div.innerText = n;
-      playerNumbers.push(n);
+    while (nums.size < 5) {
+      let rand = Math.floor(Math.random() * (ranges[col][1] - ranges[col][0] + 1)) + ranges[col][0];
+      nums.add(rand);
     }
 
-    playerCardDiv.appendChild(div);
-  });
+    grid.push(Array.from(nums));
+  }
+
+  // Build UI row by row
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 5; col++) {
+      const div = document.createElement("div");
+
+      if (row === 2 && col === 2) {
+        div.innerText = "*";
+        div.classList.add("marked");
+        playerNumbers.push("FREE");
+      } else {
+        let value = grid[col][row];
+        div.innerText = value;
+        playerNumbers.push(value);
+      }
+
+      playerCardDiv.appendChild(div);
+    }
+  }
 }
 
 generateCard();
@@ -163,7 +180,7 @@ function showWinner(name) {
 }
 
 function resetGame() {
-  winnerPopup.classList.add("hidden");
+  winnerPopup.classList.add("hidden"); // 👈 VERY IMPORTANT
 
   mainGame.style.display = "none";
   cartelaScreen.style.display = "block";
@@ -229,6 +246,23 @@ function startWaiting() {
     if (timer === 0) {
       clearInterval(countdown);
       startGame();
+    }
+  }, 1000);
+}
+
+function startResetCountdown() {
+  let time = 10;
+  countdownResetDiv.innerText = time;
+
+  const interval = setInterval(() => {
+    time--;
+    countdownResetDiv.innerText = time;
+
+    if (time <= 0) {
+      clearInterval(interval);
+
+      // 🔥 CLOSE POPUP + RESET
+      resetGame();
     }
   }, 1000);
 }
