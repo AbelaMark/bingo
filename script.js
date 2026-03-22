@@ -63,31 +63,51 @@ function generateCard() {
 
   let grid = [];
 
+  // Generate numbers per column
   for (let col = 0; col < 5; col++) {
     let nums = new Set();
 
     while (nums.size < 5) {
-      let rand = Math.floor(Math.random() * (ranges[col][1] - ranges[col][0] + 1)) + ranges[col][0];
+      let rand =
+        Math.floor(Math.random() * (ranges[col][1] - ranges[col][0] + 1)) +
+        ranges[col][0];
       nums.add(rand);
     }
 
     grid.push(Array.from(nums));
   }
 
-  // Build UI row by row
+  // Build 5x5 card (row by row)
   for (let row = 0; row < 5; row++) {
     for (let col = 0; col < 5; col++) {
       const div = document.createElement("div");
 
+      let value;
+      let index = row * 5 + col; // 🔥 correct index
+
+      // Center FREE cell
       if (row === 2 && col === 2) {
         div.innerText = "*";
         div.classList.add("marked");
         playerNumbers.push("FREE");
       } else {
-        let value = grid[col][row];
+        value = grid[col][row];
         div.innerText = value;
         playerNumbers.push(value);
       }
+
+      // 🔥 CLICK TO MARK (ONLY IF CALLED)
+      div.addEventListener("click", () => {
+        let cellValue = playerNumbers[index];
+
+        if (cellValue === "FREE") return;
+
+        if (calledNumbers.includes(cellValue)) {
+          div.classList.toggle("marked");
+        } else {
+          alert("❌ This number is not called yet!");
+        }
+      });
 
       playerCardDiv.appendChild(div);
     }
@@ -135,11 +155,7 @@ function callNumber() {
 
   // MARK PLAYER CARD
   const cells = playerCardDiv.children;
-  for (let i = 0; i < cells.length; i++) {
-    if (playerNumbers[i] === num) {
-      cells[i].classList.add("marked");
-    }
-  }
+
 
 }
 
@@ -157,7 +173,6 @@ function checkWin() {
         break;
       }
     }
-
     if (win) return true;
   }
 
